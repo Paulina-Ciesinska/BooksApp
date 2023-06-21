@@ -45,6 +45,7 @@
         thisBooks.getElement();
         thisBooks.render();
         thisBooks.initActions();
+        thisBooks.determineRatingBgc();
       }
   
       getElement() {
@@ -59,9 +60,21 @@
         thisBooks.booksData = dataSource.books;
 
         for (let book of dataSource.books) {
+        const ratingBgc = thisBooks.determineRatingBgc(book.rating);
+        const ratingWidth = book.rating * 10;
   
           /* generating HTML code based on a template and data about a specific book. */
-          const generatedHTML = templates.templateBooks(book);
+          const generatedHTML = templates.templateBooks({
+            id: book.id,
+            name: book.name,
+            price: book.price,
+            rating: book.rating,
+            image: book.image,
+            details: book.details.adults,
+            nonFiction: book.details.nonFiction,
+            ratingBgc: ratingBgc,
+            ratingWidth: ratingWidth,
+          });
           /* creating a DOM element */
           const element = utils.createDOMFromHTML(generatedHTML);
           // creating a DOM element from HTML code
@@ -134,6 +147,19 @@
         }
       }
 
+      determineRatingBgc(rating){
+        let background = '';
+        if (rating < 6) {
+            background = settings.ratings.rating1;
+          } else if (rating > 6 && rating <= 8) {
+            background = settings.ratings.rating2;
+          } else if (rating > 8 && rating <= 9) {
+            background = settings.ratings.rating3;
+          } else if (rating > 9) {
+            background = settings.ratings.rating4;
+          }
+          return background;
+      }
     }
 
     const app = new BooksList();
